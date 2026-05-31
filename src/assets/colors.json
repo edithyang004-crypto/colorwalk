@@ -1,0 +1,14 @@
+[
+  { "hex": "#F63D3D", "name": "红色" },
+  { "hex": "#FE6262", "name": "浅红" },
+  { "hex": "#EB7A4D", "name": "橙色" },
+  { "hex": "#FFBB61", "name": "橙黄" },
+  { "hex": "#FCDF5E", "name": "黄色" },
+  { "hex": "#82EB4D", "name": "黄绿" },
+  { "hex": "#6FE0A4", "name": "绿色" },
+  { "hex": "#74E4DB", "name": "青色" },
+  { "hex": "#4DC4EB", "name": "蓝色" },
+  { "hex": "#748EED", "name": "靛蓝" },
+  { "hex": "#AB4EB6", "name": "紫色" },
+  { "hex": "#7D747E", "name": "灰色" }
+]

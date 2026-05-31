@@ -1,0 +1,32 @@
+{
+  "name": "colorwalk",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "dev": "DEV_HOST=0.0.0.0 vite",
+    "dev:local": "vite",
+    "dev:pc": "vite",
+    "dev:network": "DEV_HOST=0.0.0.0 vite",
+    "dev:tunnel": "DEV_HOST=0.0.0.0 DEV_HTTP=1 DEV_PORT=5174 vite",
+    "build": "vite build && node scripts/write-dist-netlify.mjs",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chroma-js": "^3.2.0",
+    "idb-keyval": "^6.2.1",
+    "leaflet": "^1.9.4",
+    "lucide-vue-next": "^0.468.0",
+    "pinia": "^2.2.6",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "vite": "^6.0.3"
+  }
+}

@@ -1,0 +1,127 @@
+/* ── Route transitions ── */
+.fade-enter-active,
+.fade-leave-active {
+  transition:
+    opacity var(--duration-normal) var(--ease-out),
+    transform var(--duration-normal) var(--ease-out);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+/* ── Slide-up ── */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition:
+    transform var(--duration-normal) var(--ease-spring),
+    opacity var(--duration-fast) var(--ease-out);
+}
+
+.slide-up-enter-from,
+.slide-up-leave-to {
+  transform: translateY(24px);
+  opacity: 0;
+}
+
+/* ── Sheet (bottom drawer) ── */
+.sheet-enter-active,
+.sheet-leave-active {
+  transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.sheet-enter-active .sheet-panel,
+.sheet-leave-active .sheet-panel {
+  transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+.sheet-enter-from,
+.sheet-leave-to {
+  opacity: 0;
+}
+
+.sheet-enter-from .sheet-panel,
+.sheet-leave-to .sheet-panel {
+  transform: translateY(100%);
+}
+
+/* ── Stagger-in (list items entrance) ── */
+@keyframes stagger-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.stagger-in {
+  animation: stagger-fade-up var(--duration-normal) var(--ease-spring) both;
+}
+
+.stagger-in:nth-child(1) { animation-delay: 0ms; }
+.stagger-in:nth-child(2) { animation-delay: 60ms; }
+.stagger-in:nth-child(3) { animation-delay: 120ms; }
+.stagger-in:nth-child(4) { animation-delay: 180ms; }
+.stagger-in:nth-child(5) { animation-delay: 240ms; }
+.stagger-in:nth-child(6) { animation-delay: 300ms; }
+.stagger-in:nth-child(7) { animation-delay: 340ms; }
+.stagger-in:nth-child(n+8) { animation-delay: 380ms; }
+
+/* ── Pulse (idle primary button) ── */
+@keyframes btn-pulse {
+  0%, 100% {
+    box-shadow: none;
+  }
+  50% {
+    box-shadow: var(--shadow-glow-accent);
+  }
+}
+
+.btn-pulse {
+  animation: btn-pulse 3s var(--ease-material) infinite;
+}
+
+/* ── Color wheel snap ── */
+@keyframes spin-snap {
+  0% {
+    transform: rotate(var(--from-angle));
+  }
+  60% {
+    transform: rotate(var(--to-angle));
+  }
+  80% {
+    transform: rotate(calc(var(--to-angle) - 2deg));
+  }
+  100% {
+    transform: rotate(var(--to-angle));
+  }
+}
+
+/* ── Reduced motion overrides ── */
+@media (prefers-reduced-motion: reduce) {
+  .fade-enter-active,
+  .fade-leave-active,
+  .slide-up-enter-active,
+  .slide-up-leave-active,
+  .sheet-enter-active,
+  .sheet-leave-active,
+  .sheet-enter-active .sheet-panel,
+  .sheet-leave-active .sheet-panel {
+    transition-duration: 1ms !important;
+  }
+
+  .stagger-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .btn-pulse {
+    animation: none;
+  }
+}

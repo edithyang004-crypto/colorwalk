@@ -1,0 +1,32 @@
+# Colorwalk · Netlify 部署配置
+# 上次部署失败常见原因：Publish directory 填成了项目根目录 "." 或留空，必须填 dist
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Vue Router history 模式：子路径（如 /map）刷新不 404
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# 避免手机/iPad 长期缓存旧版 index.html（旧版会误报「无法启动」）
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# JS/CSS 带哈希文件名，但 iPad Safari 仍可能强缓存；部署后强制重新验证
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

@@ -1,0 +1,11 @@
+# 本文件仅作坐标备忘，不是网页！请勿在浏览器打开此文件。
+# Colorwalk 地图页地址：http://localhost:5173/map
+# （需先运行 npm run dev 或双击「启动网页.command」）
+
+# 七彩洞头村 · 高德官方分享
+# 坐标：北纬 27.819373°，东经 121.152969°
+# 地址：温州市洞头区洞头半屏山海洋旅游度假区(西南角)
+
+https://surl.amap.com/4cvlbwy7aaa
+
+https://www.amap.com/?p=B0KANAYKLY,27.819373,121.152969,七彩洞头村

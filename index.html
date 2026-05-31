@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#F4EFE4" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <title>Colorwalk</title>
+    <meta
+      name="description"
+      content="在 OpenStreetMap（WGS84）地图上漫步采色。内置温州洞头村展览路线示范（15 处采色点），点击「+ 新建路径」开始自己的记录。"
+    />
+    <style>
+      :root {
+        --brand-cream: #f4efe4;
+        --brand-ink: #302e2e;
+        --max-width: min(430px, 100vw);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body {
+        margin: 0;
+        min-height: 100%;
+        min-height: 100dvh;
+        background: var(--brand-cream);
+        color: var(--brand-ink);
+        font-family: "Source Sans 3", "Noto Sans SC", -apple-system, BlinkMacSystemFont,
+          "PingFang SC", "Helvetica Neue", sans-serif;
+      }
+      #app {
+        min-height: 100dvh;
+        width: 100%;
+        max-width: var(--max-width);
+        margin: 0 auto;
+      }
+      /* 不依赖 Vue：始终可见的加载/错误条（解决 iPad 只剩米色无提示） */
+      #cw-status {
+        position: fixed;
+        top: max(12px, env(safe-area-inset-top, 0px));
+        left: max(12px, env(safe-area-inset-left, 0px));
+        right: max(12px, env(safe-area-inset-right, 0px));
+        z-index: 2147483647;
+        margin: 0;
+        padding: 14px 16px;
+        background: #ffffff;
+        color: var(--brand-ink);
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.5;
+        border-radius: 12px;
+        box-shadow: 0 8px 28px rgba(48, 46, 46, 0.18);
+        border: 1px solid rgba(48, 46, 46, 0.12);
+      }
+      #cw-status.cw-ok {
+        display: none;
+      }
+      #cw-status.cw-err {
+        background: #fff5f5;
+        color: #ba1a1a;
+        border-color: rgba(186, 26, 26, 0.25);
+      }
+      #cw-status a {
+        color: inherit;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <p id="cw-status" role="status" aria-live="polite">第 1 步：正在连接 Colorwalk…</p>
+    <div id="app"></div>
+
+    <script>
+      (function () {
+        var status = document.getElementById('cw-status')
+        function setStatus(text, kind) {
+          if (!status) return
+          status.textContent = text
+          status.className = kind === 'err' ? 'cw-err' : kind === 'ok' ? 'cw-ok' : ''
+        }
+        window.__cwSetStatus = setStatus
+
+        if (location.protocol === 'file:') {
+          setStatus(
+            '不能直接打开本文件。请双击「启动网页.command」或执行 npm run dev，用 https://127.0.0.1:5173/ 访问。',
+            'err'
+          )
+          return
+        }
+
+        function isIgnorableError(e) {
+          if (window.__cwAppReady) return true
+          var t = e.target
+          if (t && t !== window && t.tagName) {
+            var tag = t.tagName
+            if (tag === 'IMG' || tag === 'LINK' || tag === 'VIDEO' || tag === 'SOURCE') {
+              return true
+            }
+          }
+          var msg = e.message || ''
+          if (msg === 'Script error.' || msg === 'ResizeObserver loop limit exceeded') {
+            return true
+          }
+          if (!msg && t && t.tagName) return true
+          return false
+        }
+
+        window.addEventListener(
+          'error',
+          function (e) {
+            if (isIgnorableError(e)) return
+            setStatus('脚本错误：' + (e.message || '无法加载应用'), 'err')
+          },
+          true
+        )
+        window.addEventListener('unhandledrejection', function (e) {
+          if (window.__cwAppReady) return
+          var msg =
+            (e.reason && (e.reason.message || String(e.reason))) || '运行出错'
+          if (/loading chunk|dynamically imported|Failed to fetch/.test(msg)) {
+            setStatus('模块加载失败：' + msg, 'err')
+            return
+          }
+          setStatus('运行错误：' + msg, 'err')
+        })
+
+        var entry = document.querySelector('script[type="module"][src]')
+        if (entry) {
+          entry.addEventListener('error', function () {
+            setStatus(
+              '主程序加载失败（404 或网络问题）。请重新 npm run build 并上传完整 dist 文件夹内容。',
+              'err'
+            )
+          })
+        }
+
+        window.setTimeout(function () {
+          if (status && status.classList.contains('cw-ok')) return
+          var ok = document.querySelector(
+            '#app .map-page, #app .home-sheet, #app .floating-buttons, #app .exhibition-map, #app .exhibition-entrance'
+          )
+          if (!ok) {
+            setStatus(
+              '加载超时：仍无地图界面。请刷新；确认 Netlify 已上传同一次 npm run build 生成的 index.html 与 assets 全部文件。',
+              'err'
+            )
+          }
+        }, 18000)
+      })()
+    </script>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
