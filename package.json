@@ -12,7 +12,8 @@
     "dev:pc": "vite",
     "dev:network": "DEV_HOST=0.0.0.0 vite",
     "dev:tunnel": "DEV_HOST=0.0.0.0 DEV_HTTP=1 DEV_PORT=5174 vite",
-    "build": "vite build && node scripts/write-dist-netlify.mjs",
+    "build": "vite build && node scripts/postbuild.mjs",
+    "build:gh-pages": "GITHUB_PAGES=true vite build && node scripts/postbuild.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

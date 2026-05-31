@@ -47,10 +47,14 @@ function buildStampPlugin() {
   }
 }
 
+/** GitHub Pages 项目站：https://<用户>.github.io/colorwalk/ */
+const ghPagesBase =
+  process.env.GITHUB_PAGES === 'true' ? '/colorwalk/' : undefined
+
 export default defineConfig({
   plugins: [vue(), buildStampPlugin(), ...(useHttp ? [] : [basicSsl()])],
-  // Netlify 等根域名部署用 '/'；相对路径 './' 在 /watch 等子路径下会找不到 JS
-  base: '/',
+  // 根域名（Netlify 等）用 '/'；GitHub Pages 仓库页用 '/colorwalk/'
+  base: process.env.VITE_BASE_PATH || ghPagesBase || '/',
   appType: 'spa',
   build: {
     // 展览用 iPad 可能较旧，避免 ES2020+ 语法导致整页脚本不执行
