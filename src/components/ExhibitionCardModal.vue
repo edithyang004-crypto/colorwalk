@@ -366,18 +366,20 @@ async function copyHex(index, hex) {
 
 <style scoped>
 /*
- * 通用展览卡片：所有 iPhone / iPad 共用同一套规则
- * - 遮罩层 .overlay 负责滚动（避免 Safari 内层 flex 滚不动）
- * - 卡片高度随内容增长，不设 max-height
- * - 单列：色块 → 主媒体 → 色条 → 更多媒体 → 文字
+ * 展览卡片版式（iPhone / iPad 统一）
+ * - 遮罩 .overlay 滚动，卡片随内容增高
+ * - 单列：色块 → 主媒体 → 色条 → 附图 → 文字
+ * - 附图区用更大的 --gallery-gap，避免图片贴在一起
  */
 .overlay {
-  --card-pad-x: max(16px, env(safe-area-inset-right));
-  --card-pad-y: max(12px, env(safe-area-inset-top));
-  --card-width: min(calc(100vw - 2 * var(--card-pad-x)), 560px);
-  --section-gap: 14px;
-  --swatch-max-h: 176px;
-  --media-landscape-h: 220px;
+  --card-pad-x: max(18px, env(safe-area-inset-right));
+  --card-pad-y: max(16px, env(safe-area-inset-top));
+  --card-width: min(calc(100vw - 2 * var(--card-pad-x)), 580px);
+  --card-body-pad: 24px;
+  --section-gap: 20px;
+  --gallery-gap: 22px;
+  --swatch-max-h: 168px;
+  --media-landscape-h: 228px;
 
   position: fixed;
   inset: 0;
@@ -403,7 +405,7 @@ async function copyHex(index, hex) {
   display: block;
   width: var(--card-width);
   max-width: 100%;
-  margin: 0 auto 24px;
+  margin: 0 auto 32px;
   box-sizing: border-box;
   background: linear-gradient(
     168deg,
@@ -478,8 +480,8 @@ async function copyHex(index, hex) {
 }
 
 .exhibition-card__body {
-  padding: 20px;
-  padding-bottom: max(28px, calc(20px + env(safe-area-inset-bottom, 0px)));
+  padding: var(--card-body-pad);
+  padding-bottom: max(36px, calc(var(--card-body-pad) + env(safe-area-inset-bottom, 0px)));
   width: 100%;
   box-sizing: border-box;
 }
@@ -490,9 +492,9 @@ async function copyHex(index, hex) {
 }
 
 .card-section + .card-section {
-  margin-top: 12px;
-  padding-top: 24px;
-  border-top: 1px dashed color-mix(in srgb, var(--brand-sage, #929185) 45%, transparent);
+  margin-top: 8px;
+  padding-top: 32px;
+  border-top: 1px dashed color-mix(in srgb, var(--brand-sage, #929185) 40%, transparent);
 }
 
 .section-main {
@@ -511,16 +513,17 @@ async function copyHex(index, hex) {
 .section-gallery {
   display: flex;
   flex-direction: column;
-  gap: var(--section-gap);
+  gap: var(--gallery-gap);
   width: 100%;
+  margin-top: 2px;
 }
 
 .swatch {
   width: 100%;
   aspect-ratio: 16 / 10;
   max-height: var(--swatch-max-h);
-  margin: 0 0 var(--section-gap);
-  padding: 16px 18px;
+  margin: 0 0 calc(var(--section-gap) + 4px);
+  padding: 18px 20px;
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -593,15 +596,15 @@ async function copyHex(index, hex) {
 .palette-bar {
   display: flex;
   align-items: stretch;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  height: 12px;
+  height: 14px;
 }
 
 .palette-bar--body {
   max-width: none;
   width: 100%;
-  margin: 0;
+  margin: 2px 0 0;
   flex-shrink: 0;
 }
 
@@ -674,8 +677,8 @@ async function copyHex(index, hex) {
   overflow: hidden;
   margin: 0;
   flex-shrink: 0;
-  border: 1px solid color-mix(in srgb, var(--brand-ink, #302e2e) 6%, transparent);
-  box-shadow: 0 4px 16px color-mix(in srgb, var(--point-color, #ccc) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--brand-ink, #302e2e) 5%, transparent);
+  box-shadow: 0 6px 20px color-mix(in srgb, var(--point-color, #ccc) 14%, transparent);
   background: transparent;
   cursor: zoom-in;
   display: block;
@@ -750,8 +753,10 @@ async function copyHex(index, hex) {
 
 .story {
   margin: 0;
+  padding-top: calc(var(--section-gap) + 4px);
+  border-top: 1px solid color-mix(in srgb, var(--brand-sage, #929185) 28%, transparent);
   font-size: var(--font-footnote, 14px);
-  line-height: var(--line-relaxed, 1.65);
+  line-height: 1.72;
   color: var(--text-secondary, #5a5b57);
 }
 
@@ -813,24 +818,33 @@ async function copyHex(index, hex) {
   opacity: 0;
 }
 
-/* 平板及以上：略放大内边距与媒体高度，仍保持单列 */
+/* 平板及以上：更舒展的内边距与图间距 */
 @media (min-width: 744px) {
   .overlay {
-    --card-pad-x: max(20px, env(safe-area-inset-right));
-    --card-pad-y: max(16px, env(safe-area-inset-top));
-    --swatch-max-h: 192px;
-    --media-landscape-h: 240px;
+    --card-pad-x: max(24px, env(safe-area-inset-right));
+    --card-pad-y: max(20px, env(safe-area-inset-top));
+    --card-body-pad: 32px;
+    --section-gap: 24px;
+    --gallery-gap: 28px;
+    --swatch-max-h: 180px;
+    --media-landscape-h: 252px;
   }
 
   .exhibition-card__body {
-    padding: 24px 28px;
-    padding-bottom: max(36px, calc(28px + env(safe-area-inset-bottom, 0px)));
+    padding: var(--card-body-pad);
+    padding-bottom: max(44px, calc(var(--card-body-pad) + env(safe-area-inset-bottom, 0px)));
+  }
+
+  .card-section + .card-section {
+    margin-top: 12px;
+    padding-top: 40px;
   }
 
   .swatch {
     justify-content: flex-start;
     align-items: stretch;
-    padding: 18px 16px;
+    padding: 20px 22px;
+    margin-bottom: calc(var(--section-gap) + 6px);
   }
 
   .swatch__info {
@@ -874,6 +888,13 @@ async function copyHex(index, hex) {
 
   .story {
     font-size: 15px;
+    line-height: 1.75;
+    padding-top: calc(var(--section-gap) + 8px);
+  }
+
+  .close-btn {
+    top: 18px;
+    right: 18px;
   }
 }
 </style>
